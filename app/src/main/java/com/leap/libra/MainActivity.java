@@ -3,6 +3,11 @@ package com.leap.libra;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+/**
+ * MainActivity :
+ * <p>
+ * </> Created by ylwei on 2018/11/21.
+ */
 public class MainActivity extends AppCompatActivity {
 
   @Override
