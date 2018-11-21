@@ -12,13 +12,10 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "SERVER_URL", System.getenv("SERVER_URL") ?: "\"http://172.17.6.39:8088/leap/\"")
         buildConfigField("String", "UPDATE_URL", System.getenv("UPDATE_URL") ?: "\"https://a.qianfan123.com/ap/s/\"")
-        buildConfigField("String", "AGREEMENT_URL", System.getenv("AGREEMENT_URL") ?: "\"http://www.qianfan123.com/test/resources/agreement_m.html\"")
         buildConfigField("String", "LOG_URL", System.getenv("LOG_URL") ?: "\"https://logstash-test.100sails.com:8905\"")
         buildConfigField("String", "LOG_URL_BURY", System.getenv("LOG_URL_BURY") ?: "\"https://track.qianfan12.com:9999/track/test/v1/qfapp\"")
         buildConfigField("String", "LOG_TOKEN", System.getenv("LOG_TOKEN") ?: "\"bG9nc3Rhc2g6YW9ESjBKVmdrZk5QamFybg==\"")
         buildConfigField("String", "LOG_TOKEN_BURY", System.getenv("LOG_TOKEN_BURY") ?: "\"bG9nc3Rhc2g6YW9ESjBKVmdrZk5QamFybg==\"")
-        buildConfigField("String", "WX_APP_ID", System.getenv("WX_APP_ID") ?: "\"wxbad756184b95109a\"")
-        buildConfigField("String", "QQ_APP_ID", System.getenv("QQ_APP_ID") ?: "\"1106342192\"")
 
         multiDexEnabled true
         manifestPlaceholders = [
@@ -41,7 +38,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            manifestPlaceholders = [app_name: "小幕-测试"]
+            manifestPlaceholders = [app_name: "leap"]
         }
         release {
             minifyEnabled false
@@ -96,7 +93,7 @@ static def gitVersionName() {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':base')
+    compile project(':grade')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
