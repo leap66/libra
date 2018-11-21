@@ -2,26 +2,111 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
+    buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "com.leap.libra"
-        minSdkVersion 19
+        minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "SERVER_URL", System.getenv("SERVER_URL") ?: "\"http://172.17.6.39:8088/leap/\"")
+        buildConfigField("String", "UPDATE_URL", System.getenv("UPDATE_URL") ?: "\"https://a.qianfan123.com/ap/s/\"")
+        buildConfigField("String", "AGREEMENT_URL", System.getenv("AGREEMENT_URL") ?: "\"http://www.qianfan123.com/test/resources/agreement_m.html\"")
+        buildConfigField("String", "LOG_URL", System.getenv("LOG_URL") ?: "\"https://logstash-test.100sails.com:8905\"")
+        buildConfigField("String", "LOG_URL_BURY", System.getenv("LOG_URL_BURY") ?: "\"https://track.qianfan12.com:9999/track/test/v1/qfapp\"")
+        buildConfigField("String", "LOG_TOKEN", System.getenv("LOG_TOKEN") ?: "\"bG9nc3Rhc2g6YW9ESjBKVmdrZk5QamFybg==\"")
+        buildConfigField("String", "LOG_TOKEN_BURY", System.getenv("LOG_TOKEN_BURY") ?: "\"bG9nc3Rhc2g6YW9ESjBKVmdrZk5QamFybg==\"")
+        buildConfigField("String", "WX_APP_ID", System.getenv("WX_APP_ID") ?: "\"wxbad756184b95109a\"")
+        buildConfigField("String", "QQ_APP_ID", System.getenv("QQ_APP_ID") ?: "\"1106342192\"")
+
+        multiDexEnabled true
+        manifestPlaceholders = [
+                app_name       : "@string/app_name",
+                PUSH_APP_KEY   : System.getenv('PUSH_APP_KEY') ?: "24835114",
+                PUSH_APP_SECRET: System.getenv('PUSH_APP_SECRET') ?: "7697a4b4fbf195d35e5922a34467e82a"
+        ]
+        println("------------------环境变量--------------")
+        println("versionCode=" + gitVersionCode())
+        println("versionName=" + gitVersionName())
+        getBuildConfigFields().each { item ->
+            println("KEY=" + item.key)
+            println("VALUE=" + item.value.getValue())
+        }
+        println("------------------环境变量--------------")
+    }
+    dataBinding {
+        enabled = true
     }
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            manifestPlaceholders = [app_name: "小幕-测试"]
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    applicationVariants.all { variant ->
+        def versionCode = gitVersionCode()
+        def versionName = variant.buildType.name + "." + versionCode
+        if (variant.buildType.name == "release") {
+            versionName = gitVersionName()
+        }
+        variant.mergedFlavor.versionCode = versionCode
+        variant.mergedFlavor.versionName = versionName
+
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                def fileName = "libra-${variant.buildType.name}-${versionName}-${versionCode}.apk"
+                output.outputFile = new File(outputFile.parent, fileName)
+            }
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+    }
+}
+
+static def gitVersionCode() {
+    def cmd = 'git rev-list HEAD --first-parent --count'
+    cmd.execute().text.trim().toInteger()
+}
+
+static def gitVersionName() {
+    def cmd = 'git describe --tags'
+    def version = cmd.execute().text.trim()
+    def pattern = "-(\\d+)-g"
+    def matcher = version =~ pattern
+    if (matcher) {
+        version = version.substring(0, matcher.start())
+    }
+    return version
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':base')
-    compile 'com.android.support:appcompat-v7:25.3.0'
-    compile 'com.android.support.constraint:constraint-layout:1.1.0'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
     testCompile 'junit:junit:4.12'
+
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'me.dm7.barcodescanner:zxing:1.9.8'
+    compile 'com.github.LuckSiege.PictureSelector:picture_library:v2.1.1'
+    compile 'com.jungly:gridPasswordView:0.3'
+
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
 }
