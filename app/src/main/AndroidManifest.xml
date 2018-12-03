@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".presentation.config.ConfigActivity" />
+        <activity android:name=".presentation.hybrid.HybridActivity" />
     </application>
 
 </manifest>

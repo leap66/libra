@@ -18,6 +18,11 @@ android {
         buildConfigField("String", "LOG_TOKEN_BURY", System.getenv("LOG_TOKEN_BURY") ?: "\"bG9nc3Rhc2g6YW9ESjBKVmdrZk5QamFybg==\"")
 
         multiDexEnabled true
+
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86"
+        }
+
         manifestPlaceholders = [
                 app_name       : "@string/app_name",
                 PUSH_APP_KEY   : System.getenv('PUSH_APP_KEY') ?: "24835114",

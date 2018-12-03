@@ -5,6 +5,7 @@ import android.os.Build;
 import com.leap.base.data.base.BUcn;
 import com.leap.base.util.DateUtil;
 import com.leap.base.util.DeviceInfoUtil;
+import com.leap.libra.BuildConfig;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +28,7 @@ public class ConfigUtil {
     list.add(new BUcn("", "当前时间", DateUtil.format(new Date(), DateUtil.DEFAULT_DATE_FORMAT)));
     list.add(new BUcn("", "本机mac地址", DeviceInfoUtil.getMacAddr()));
     list.add(new BUcn("", "设备IP", DeviceInfoUtil.getDeviceIP()));
+    list.add(new BUcn("", "版本信息", BuildConfig.VERSION_NAME));
     list.add(new BUcn("", "屏幕类型 1- 横屏 0- 竖屏", DeviceInfoUtil.getScreenType()));
     list.add(new BUcn("", "路由mac地址", DeviceInfoUtil.getRouterMac()));
     list.add(new BUcn("", "系统版本", DeviceInfoUtil.getOsVersion()));

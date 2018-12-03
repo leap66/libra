@@ -1,30 +1,23 @@
 package com.leap.libra.presentation.config;
 
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
 import com.github.markzhai.recyclerview.BaseViewAdapter;
 import com.github.markzhai.recyclerview.SingleTypeAdapter;
 import com.leap.base.data.base.BUcn;
-import com.leap.base.util.DateUtil;
-import com.leap.base.util.DeviceInfoUtil;
-import com.leap.grade.util.BaseBarActivity;
 import com.leap.libra.R;
 import com.leap.libra.databinding.ActivityConfigBinding;
+import com.leap.libra.presentation.base.BaseActivity;
 import com.leap.libra.presentation.config.widget.ConfigUtil;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * ConfigActivity :
  * <p>
  * </> Created by ylwei on 2018/11/21.
  */
-public class ConfigActivity extends BaseBarActivity {
+public class ConfigActivity extends BaseActivity {
   private ActivityConfigBinding binding;
   private SingleTypeAdapter<BUcn> adapter;
 
