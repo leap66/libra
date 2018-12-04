@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
+            name="adapter"
+            type="android.support.v7.widget.RecyclerView.Adapter" />
+
+        <variable
             name="presenter"
-            type="com.leap.libra.presentation.main.MainActivity.Presenter" />
+            type="com.leap.libra.presentation.config.ConfigActivity.Presenter" />
     </data>
 
     <LinearLayout
@@ -36,7 +41,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/app_name"
+                android:text="@string/app_config_title"
                 android:textColor="@color/charcoalGrey"
                 android:textSize="@dimen/text_size_18"
                 android:textStyle="bold" />
@@ -48,30 +53,9 @@
 
         <View style="@style/divider_item" />
 
-        <LinearLayout
+        <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/title_bar_height"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_silver_4"
-                android:gravity="center"
-                android:onClick="@{()->presenter.onConfig()}"
-                android:text="@string/app_config_title" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/title_bar_height"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_silver_4"
-                android:gravity="center"
-                android:onClick="@{()->presenter.onTest()}"
-                android:text="@string/app_config_title" />
-        </LinearLayout>
+            android:layout_height="match_parent"
+            app:adapterAnd="@{adapter}" />
     </LinearLayout>
 </layout>

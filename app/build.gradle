@@ -1,26 +1,27 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 27
     defaultConfig {
         applicationId "com.leap.libra"
-        minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion 19
+        targetSdkVersion 27
+        versionCode gitVersionCode()
+        versionName currentName()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "SERVER_URL", System.getenv("SERVER_URL") ?: "\"http://172.17.6.39:8088/leap/\"")
         buildConfigField("String", "UPDATE_URL", System.getenv("UPDATE_URL") ?: "\"https://a.qianfan123.com/ap/s/\"")
-        buildConfigField("String", "AGREEMENT_URL", System.getenv("AGREEMENT_URL") ?: "\"http://www.qianfan123.com/test/resources/agreement_m.html\"")
         buildConfigField("String", "LOG_URL", System.getenv("LOG_URL") ?: "\"https://logstash-test.100sails.com:8905\"")
         buildConfigField("String", "LOG_URL_BURY", System.getenv("LOG_URL_BURY") ?: "\"https://track.qianfan12.com:9999/track/test/v1/qfapp\"")
         buildConfigField("String", "LOG_TOKEN", System.getenv("LOG_TOKEN") ?: "\"bG9nc3Rhc2g6YW9ESjBKVmdrZk5QamFybg==\"")
         buildConfigField("String", "LOG_TOKEN_BURY", System.getenv("LOG_TOKEN_BURY") ?: "\"bG9nc3Rhc2g6YW9ESjBKVmdrZk5QamFybg==\"")
-        buildConfigField("String", "WX_APP_ID", System.getenv("WX_APP_ID") ?: "\"wxbad756184b95109a\"")
-        buildConfigField("String", "QQ_APP_ID", System.getenv("QQ_APP_ID") ?: "\"1106342192\"")
 
         multiDexEnabled true
+
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86"
+        }
+
         manifestPlaceholders = [
                 app_name       : "@string/app_name",
                 PUSH_APP_KEY   : System.getenv('PUSH_APP_KEY') ?: "24835114",
@@ -41,7 +42,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            manifestPlaceholders = [app_name: "小幕-测试"]
+            manifestPlaceholders = [app_name: "leap"]
         }
         release {
             minifyEnabled false
@@ -54,14 +55,14 @@ android {
         if (variant.buildType.name == "release") {
             versionName = gitVersionName()
         }
-        variant.mergedFlavor.versionCode = versionCode
-        variant.mergedFlavor.versionName = versionName
 
-        variant.outputs.each { output ->
+        variant.outputs.all { output ->
+            output.versionCodeOverride = versionCode
+            output.versionNameOverride = versionName
             def outputFile = output.outputFile
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
                 def fileName = "libra-${variant.buildType.name}-${versionName}-${versionCode}.apk"
-                output.outputFile = new File(outputFile.parent, fileName)
+                outputFileName = fileName
             }
         }
     }
@@ -94,19 +95,23 @@ static def gitVersionName() {
     return version
 }
 
+static def currentName() {
+    def versionName = gitVersionName()
+    if (versionName == null || versionName == "") {
+        return "debug." + gitVersionCode()
+    }
+    return versionName
+}
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':base')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    testCompile 'junit:junit:4.12'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':grade')
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'me.dm7.barcodescanner:zxing:1.9.8'
-    compile 'com.github.LuckSiege.PictureSelector:picture_library:v2.1.1'
-    compile 'com.jungly:gridPasswordView:0.3'
-
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+    implementation 'com.android.support:multidex:1.0.1'
+    implementation 'me.dm7.barcodescanner:zxing:1.9.8'
+    implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.1.1'
+    implementation 'com.jungly:gridPasswordView:0.3'
 }
