@@ -6,12 +6,17 @@
         <variable
             name="item"
             type="com.leap.base.data.base.BUcn" />
+
+        <variable
+            name="presenter"
+            type="com.leap.libra.presentation.config.ConfigActivity.Presenter" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        android:onClick="@{()->presenter.onItem(item)}"
         android:orientation="vertical">
 
         <TextView

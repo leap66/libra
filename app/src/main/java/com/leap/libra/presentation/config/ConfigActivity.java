@@ -4,9 +4,11 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.View;
 
-import com.github.markzhai.recyclerview.BaseViewAdapter;
-import com.github.markzhai.recyclerview.SingleTypeAdapter;
+import com.leap.base.adapter.typeAdapter.MultiTypeAdapter;
+import com.leap.base.adapter.typeAdapter.SingleTypeAdapter;
+import com.leap.base.adapter.typeAdapter.widget.BaseViewAdapter;
 import com.leap.base.data.base.BUcn;
+import com.leap.base.util.ToastUtil;
 import com.leap.libra.R;
 import com.leap.libra.databinding.ActivityConfigBinding;
 import com.leap.libra.presentation.base.BaseActivity;
@@ -19,7 +21,7 @@ import com.leap.libra.presentation.config.widget.ConfigUtil;
  */
 public class ConfigActivity extends BaseActivity {
   private ActivityConfigBinding binding;
-  private SingleTypeAdapter<BUcn> adapter;
+  private MultiTypeAdapter adapter;
 
   @Override
   protected void initComponent() {
@@ -35,7 +37,7 @@ public class ConfigActivity extends BaseActivity {
 
   @Override
   protected void loadData(Bundle savedInstanceState) {
-    adapter.set(ConfigUtil.getConfigList());
+    adapter.addAll(ConfigUtil.getConfigList(), 1);
   }
 
   public class Presenter implements BaseViewAdapter.Presenter {
@@ -43,10 +45,15 @@ public class ConfigActivity extends BaseActivity {
     public void onBack() {
       onBackPressed();
     }
+
+    public void onItem(BUcn ucn) {
+      ToastUtil.showSuccess(ucn.getName());
+    }
   }
 
   private void initAdapter() {
-    adapter = new SingleTypeAdapter<>(context, R.layout.item_config_list);
+    adapter = new MultiTypeAdapter(context);
+    adapter.addViewTypeToLayoutMap(1, R.layout.item_config_list);
     adapter.setPresenter(new Presenter());
     binding.setAdapter(adapter);
   }

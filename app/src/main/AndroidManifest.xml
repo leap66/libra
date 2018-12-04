@@ -10,6 +10,7 @@
         android:label="${app_name}"
         android:supportsRtl="true"
         android:theme="@style/BaseTheme"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:replace="android:label">
         <activity android:name=".presentation.main.MainActivity">
             <intent-filter>
